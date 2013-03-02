@@ -33,5 +33,7 @@ Takes XML output from the above, and builds maps similar to what you'd see in-ga
 
 Takes XML output from the map script, and builds Wavefront .OBJ files suitable for isometric-style viewing. (The ceilings cover the empty space, not the rooms.) The "level2obj.pl" variant includes scenery and monsters; adjust the angle on line 245 to match your desired view.
 
+### scri2json.pl
 
+This extracts "scri" resources from the Pathways application resource fork, decrypts them, and exports the data in JSON format.
 
