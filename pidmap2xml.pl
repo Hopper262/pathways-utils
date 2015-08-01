@@ -3,14 +3,29 @@ use strict;
 use warnings 'FATAL' => 'all';
 use XML::Writer ();
 use Encode ();
+use FindBin();
 
-my $out = XML::Writer->new('DATA_MODE' => 1, 'DATA_INDENT' => '  ', 'ENCODING' => 'us-ascii');
+require $FindBin::Bin . '/io.subs';
+
+my ($vers) = $ARGV[0] || 'full20';
+
+# read map
+my (@leveldata);
+binmode STDIN;
+while (!eof(STDIN))
+{
+  my $data;
+  read(STDIN, $data, 16834);
+  push(@leveldata, $data);
+}
+
+my $xmldata;
+my $out = XML::Writer->new('OUTPUT' => \$xmldata, 'DATA_MODE' => 1, 'DATA_INDENT' => '  ', 'ENCODING' => 'us-ascii');
 $out->startTag('pid_map');
 
-binmode STDIN;
-
-for (my $level_idx = 0; !eof(STDIN); $level_idx++)
+for (my $level_idx = 0; $level_idx < scalar @leveldata; $level_idx++)
 {
+  SetReadSource($leveldata[$level_idx]);
   
   my $namesize = ReadUint8();
   my $name = Encode::decode("MacRoman", ReadRaw($namesize));
@@ -83,11 +98,22 @@ for (my $level_idx = 0; !eof(STDIN); $level_idx++)
     {
       
       my @wattrs;
-      for my $wtype (qw(bottom left corner_br corner_bl corner_tr corner_tl))
+      for my $wtype (qw(top left corner_tr corner_tl corner_br corner_bl))
       {
         my $type = ReadUint8();
         my $tex = ReadUint8();
+        my $texflag = 0;
+        if ($tex > 127)
+        {
+          $texflag = 1;
+          $tex -= 128;
+        }
+        if ($tex > 63)
+        {
+          $tex -= 128;
+        }
         push(@wattrs, $wtype . '_type' => $type) if ($type != 0);
+        push(@wattrs, $wtype . '_textureflag' => $texflag) if ($texflag != 0);
         push(@wattrs, $wtype . '_texture' => $tex) if ($tex != 0);
       }
       
@@ -106,96 +132,6 @@ for (my $level_idx = 0; !eof(STDIN); $level_idx++)
 }
 $out->endTag('pid_map');
 $out->end();
+
+print $xmldata;
 exit;
-
-
-sub ReadUint32
-{
-  return ReadPacked('L>', 4);
-}
-sub ReadSint32
-{
-  return ReadPacked('l>', 4);
-}
-sub ReadUint16
-{
-  return ReadPacked('S>', 2);
-}
-sub ReadSint16
-{
-  return ReadPacked('s>', 2);
-}
-sub ReadUint8
-{
-  return ReadPacked('C', 1);
-}
-sub ReadSint8
-{
-  return ReadPacked('c', 1);
-}
-sub ReadFixed
-{
-  my $fixed = ReadSint32();
-  return $fixed / 65536.0;
-}
-
-our $BLOB = undef;
-our $BLOBoff = 0;
-our $BLOBlen = 0;
-sub SetReadSource
-{
-  my ($data) = @_;
-  $BLOB = $_[0];
-  $BLOBoff = 0;
-  $BLOBlen = defined($BLOB) ? length($BLOB) : 0;
-}
-sub SetReadOffset
-{
-  my ($off) = @_;
-  die "Can't set offset for piped data" unless defined $BLOB;
-  die "Bad offset for data" if (($off < 0) || ($off > $BLOBlen));
-  $BLOBoff = $off;
-}
-sub CurOffset
-{
-  return $BLOBoff;
-}
-sub ReadRaw
-{
-  my ($size, $nofail) = @_;
-  die "Can't read negative size" if $size < 0;
-  return '' if $size == 0;
-  if (defined $BLOB)
-  {
-    my $left = $BLOBlen - $BLOBoff;
-    if ($size > $left)
-    {
-      return undef if $nofail;
-      die "Not enough data in blob (offset $BLOBoff, length $BLOBlen)";
-    }
-    $BLOBoff += $size;
-    return substr($BLOB, $BLOBoff - $size, $size);
-  }
-  else
-  {
-    my $chunk;
-    my $rsize = read STDIN, $chunk, $size;
-    $BLOBoff += $rsize;
-    unless ($rsize == $size)
-    {
-      return undef if $nofail;
-      die "Failed to read $size bytes";
-    }
-    return $chunk;
-  }
-}
-sub ReadPadding
-{
-  ReadRaw(@_);
-}
-sub ReadPacked
-{
-  my ($template, $size) = @_;
-  return unpack($template, ReadRaw($size));
-}
-
