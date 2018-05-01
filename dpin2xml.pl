@@ -224,10 +224,10 @@ for (my $level_idx = 0; !ReadDone(); $level_idx++)
     my $type = ReadSint16();
     my $act = ReadSint16();
     my $quant = ReadSint16();
-    my $contain = ReadSint16();
+    my $next = ReadSint16();
     
-    $out->emptyTag('pickup', 'index' => $pickup_idx, 'type' => $type, 'activity' => $act, 'quantity' => $quant, 'contains' => $contain);
     next if $type < 0;
+    $out->emptyTag('pickup', 'index' => $pickup_idx, 'type' => $type, 'activity' => $act, 'quantity_or_contains' => $quant, 'next' => $next);
   }
   $out->endTag('pickups');
   
