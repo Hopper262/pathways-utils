@@ -89,7 +89,7 @@ binmode STDIN;
   my ($flashlight) = ReadUint8(1);
   $out->emptyTag('vision', 'ir_goggles' => $goggles, 'flashlight' => $flashlight);
   
-  ReadPadding(8); # Unknown4c  
+  ReadPadding(8); # Unknown4c
   my $poison = ReadSint16();
   ReadPadding(10) unless $a1demo; # Unknown4d,e
   $out->emptyTag('ailments', 'poison_rate' => $poison);
@@ -226,8 +226,8 @@ for (my $level_idx = 0; !ReadDone(); $level_idx++)
     my $quant = ReadSint16();
     my $contain = ReadSint16();
     
-    next unless $valid_pickups{$pickup_idx};
     $out->emptyTag('pickup', 'index' => $pickup_idx, 'type' => $type, 'activity' => $act, 'quantity' => $quant, 'contains' => $contain);
+    next if $type < 0;
   }
   $out->endTag('pickups');
   
@@ -246,7 +246,7 @@ for (my $level_idx = 0; !ReadDone(); $level_idx++)
     my $xpos = ReadSint32();
     my $ypos = ReadSint32();
     
-    my $collbit = ReadUint16();    
+    my $collbit = ReadUint16();
     my $collection = (($collbit >> 7) & 0xff);
     my $frame = ($collbit & 0x7f);
     
