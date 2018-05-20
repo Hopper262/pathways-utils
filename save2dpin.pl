@@ -164,7 +164,7 @@ sub WriteFixed
 {
   my $num = Num(@_);
   WriteSint32(sprintf("%.0f", $num * 65536.0));
-}  
+}
 sub WritePadding
 {
   print "\0" x $_[0];

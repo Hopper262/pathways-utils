@@ -123,7 +123,7 @@ for (my $level_idx = 0; $level_idx < scalar @leveldata; $level_idx++)
       
       next if ($type < 1 && !scalar(@wattrs)); # skip void, so our file isn't so huge
      
-     $out->emptyTag('sector', 'col' => $col, 'row' => $row, 'type' => $type, 'extra' => $addl, 'item' => $item, @wattrs);      
+     $out->emptyTag('sector', 'col' => $col, 'row' => $row, 'type' => $type, 'extra' => $addl, 'item' => $item, @wattrs);
     }
   }
   $out->endTag('sectors');

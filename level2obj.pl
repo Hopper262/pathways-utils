@@ -89,7 +89,7 @@ for my $sector (@{ $mp->{'sectors'}[0]{'sector'} })
         ($sector->{'left_texture'} || 0) >= 0)
     {
       my $neighbor = $secinfo[$row][$col - 1];
-      $neighbor->{'right'} = [ 
+      $neighbor->{'right'} = [
         ($sector->{'left_texture'} || 0),
         WallShort($sector->{'left_type'}, 'right') ];
     }
@@ -486,7 +486,7 @@ sub add_indexed
   return $hashref->{$val} if exists $hashref->{$val};
 
   my $idx = 1 + scalar keys %$hashref;
-  $hashref->{$val} = $idx;  
+  $hashref->{$val} = $idx;
   print sprintf($printfmt, $val, $idx) if $printfmt;
   return $idx;
 }
@@ -523,5 +523,3 @@ sub IndexOf
   }
   return undef;
 }
-
-

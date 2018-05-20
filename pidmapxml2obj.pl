@@ -78,7 +78,7 @@ for my $sector (@{ $mp->{'sectors'}[0]{'sector'} })
         ($sector->{'left_texture'} || 0) >= 0)
     {
       my $neighbor = $secinfo[$row][$col - 1];
-      $neighbor->{'right'} = [ 
+      $neighbor->{'right'} = [
         ($sector->{'left_texture'} || 0),
         WallShort($sector->{'left_type'}, 'right') ];
     }
@@ -236,7 +236,7 @@ for my $card (qw(top bottom left right))
 #   for my $col (0..31)
 #   {
 #     my $sref = $secinfo[$row][$col];
-#     
+#
 #     if ($sref->{'open'})
 #     {
 #       # build floor, render bits of ceiling as necessary
@@ -255,7 +255,7 @@ for my $card (qw(top bottom left right))
 #         }
 #       }
 #       Floor($row, $col, $colltype, @floor);
-# 
+#
 #       # render corner walls
 #       for my $corner (qw(bl br tr tl))
 #       {
@@ -264,7 +264,7 @@ for my $card (qw(top bottom left right))
 #         my $cd = $cornerdirs{$corner};
 #         CornerWall($row, $col, $colltype, $tex, $cd->[1], $cd->[2]);
 #       }
-#       
+#
 #       # render edge walls
 #       for my $card (qw(top left bottom right))
 #       {
@@ -295,7 +295,7 @@ for my $card (qw(top bottom left right))
 #         }
 #       }
 #       Ceiling($row, $col, $colltype, @ceil);
-#       
+#
 #       # render corner walls
 #       for my $corner (qw(bl br tr tl))
 #       {
@@ -304,7 +304,7 @@ for my $card (qw(top bottom left right))
 #         my $cd = $cornerdirs{$corner};
 #         CornerWall($row, $col, $colltype, $tex, $cd->[2], $cd->[1]);
 #       }
-#       
+#
 #       # no edge walls for closed sector
 #     }
 #   }
@@ -512,7 +512,7 @@ sub add_indexed
   return $hashref->{$val} if exists $hashref->{$val};
 
   my $idx = 1 + scalar keys %$hashref;
-  $hashref->{$val} = $idx;  
+  $hashref->{$val} = $idx;
   print sprintf($printfmt, $val, $idx) if $printfmt;
   return $idx;
 }

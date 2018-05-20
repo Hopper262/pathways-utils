@@ -62,7 +62,7 @@ for my $coll (@$colls)
       {
         for my $row (0..($rowlen - 1))
         {
-          my $pi = unpack('C', substr($pixels, $offset++, 1));          
+          my $pi = unpack('C', substr($pixels, $offset++, 1));
           my $err = $img->SetPixel($ys => $col, $xs => $row,
                                    'channel' => 'All',
                                    'color' => $clrs[$pi]);

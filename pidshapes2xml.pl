@@ -317,7 +317,7 @@ for my $cref (sort { $a->[0] <=> $b->[0] } @collinfo)
 #           my $endlen = length($linedata);
 #           $linedata =~ s/^$nul+//;
 #           my $beglen = length($linedata);
-#           
+#
 #           my $last_row = $endlen;
 #           my $first_row = $endlen - $beglen;
 #           $bdata .= pack('s>s>', $first_row, $last_row);

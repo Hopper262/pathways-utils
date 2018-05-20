@@ -107,7 +107,7 @@ for my $cref (sort { $a->[0] <=> $b->[0] } @scrinfo)
     if (scalar(@strings) != $num_strings);
   SetReadOffset($pos);
   
-  my %ops;  
+  my %ops;
   while (($pos = CurOffset()) < $str_offset)
   {
     my $opcode = ReadUint8();
