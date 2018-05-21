@@ -218,6 +218,7 @@ for my $cref (sort { $a->[0] <=> $b->[0] } @scrinfo)
     for my $pos (@keys)
     {
       my $info = $ops{$pos};
+      $info->{'_index'} = $opmap{$pos};
       if ($info->{'goto'})
       {
         $info->{'goto'} = $opmap{$info->{'goto'}};
