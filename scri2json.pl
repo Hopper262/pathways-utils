@@ -246,9 +246,14 @@ for my $cref (sort { $a->[0] <=> $b->[0] } @scrinfo)
     };
 }
 
-print JSON->new->ascii->encode(\%out_scrs);
+print EncodeJSON(\%out_scrs);
 exit;
 
+
+sub EncodeJSON
+{
+  return JSON->new->ascii->pretty->canonical->encode(@_);
+}
 
 sub ReadUint32
 {
